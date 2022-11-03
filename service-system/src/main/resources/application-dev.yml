@@ -1,0 +1,32 @@
+server:
+  port: 8802
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  datasource:
+    url: jdbc:mysql://localhost:3306/milk_auth?characterEncoding=utf-8&useSSL=false
+    username: root
+    password: 123kkk
+    driver-class-name: com.mysql.cj.jdbc.Driver
+knife4j:
+  # 是否开启加强模式 true开启  false关闭
+  enable: true
+  setting:
+    # 是否开启调试功能  true开启  false关闭
+    enableDebug: true
+  basic:
+    # 是否开启认证功能  true开启  false关闭
+    enable: false
+    username: admin
+    password: 123456
