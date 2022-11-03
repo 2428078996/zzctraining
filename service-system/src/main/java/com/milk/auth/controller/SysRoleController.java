@@ -7,9 +7,12 @@ import com.milk.common.R;
 import com.milk.common.ResultEnum;
 import com.milk.model.params.PageParam;
 import com.milk.model.pojo.SysRole;
+import com.milk.model.vo.SysRoleVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +27,7 @@ import java.util.List;
 @Api(tags="角色模块")
 @RestController
 @RequestMapping("/admin/system/role")
+@Slf4j
 public class SysRoleController {
 
     @Autowired
@@ -39,15 +43,19 @@ public class SysRoleController {
     @ApiOperation(value="分页获取角色列表")
     @PostMapping("/list")
     public R page(@RequestBody PageParam pageParam){
+
+        log.info("数据{}",pageParam);
         IPage<SysRole> pageInfo = sysRoleService.pageList(pageParam);
         return R.success(pageInfo);
     }
 
     @ApiOperation(value="根据id获取角色")
     @GetMapping("/{id}")
-    public R<SysRole> findRoleById(@PathVariable("id") Long id){
+    public R<SysRoleVo> findRoleById(@PathVariable("id") Long id){
         SysRole sysRole = sysRoleService.getById(id);
-        return R.success(sysRole);
+        SysRoleVo sysRoleVo = new SysRoleVo();
+        BeanUtils.copyProperties(sysRole,sysRoleVo);
+        return R.success(sysRoleVo);
     }
 
 
@@ -78,7 +86,8 @@ public class SysRoleController {
     @PutMapping("/update")
     @ApiOperation(value="修改角色信息")
     public R update(@RequestBody SysRole sysRole){
-        sysRoleService.save(sysRole);
+        log.info("数据：{}",sysRole);
+        sysRoleService.updateById(sysRole);
         return R.success("修改成功！");
     }
 }

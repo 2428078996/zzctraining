@@ -14,5 +14,5 @@ public class PageParam {
 
     private Integer pageSize;
 
-    private String roleQuery;
+    private String queryParams;
 }

@@ -26,7 +26,7 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     public IPage<SysRole> pageList(PageParam pageParam) {
 
         Page<SysRole> page = new Page<>(pageParam.getPage(), pageParam.getPageSize());
-        IPage<SysRole> pageInfo = sysRoleMapper.pageList(page, pageParam.getRoleQuery());
+        IPage<SysRole> pageInfo = sysRoleMapper.pageList(page, pageParam.getQueryParams());
         return pageInfo;
     }
 }
