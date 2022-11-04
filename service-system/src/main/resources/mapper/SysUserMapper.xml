@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.milk.auth.mapper.SysUserMapper">
+
+    <resultMap id="SysUserMap" type="com.milk.model.pojo.SysUser" autoMapping="true">
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="columns">
+        id,username,password,name,phone,head_url,post_id,dept_id,description,status,create_time,update_time,is_deleted
+    </sql>
+
+    <select id="selectPage" resultMap="SysUserMap" parameterType="com.milk.model.params.UserPageParam">
+        select <include refid="columns" />
+        from sys_user
+        <where>
+            <if test="user.keyword != null and user.keyword != ''">
+                and (username like CONCAT('%',#{user.keyword},'%') or  name like CONCAT('%',#{user.keyword},'%') or phone like CONCAT('%',#{user.phone},'%'))
+            </if>
+            <if test="user.createTimeBegin != null and user.createTimeBegin != ''">
+                and create_time &gt;= #{user.createTimeBegin}
+            </if>
+            <if test="user.createTimeEnd != null and user.createTimeEnd != ''">
+                and create_time &lt;= #{user.createTimeEnd}
+            </if>
+            and is_deleted = 0
+        </where>
+        order by id desc
+    </select>
+
+</mapper>
