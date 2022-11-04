@@ -4,6 +4,8 @@ import com.milk.common.R;
 import com.milk.common.ResultEnum;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,9 +27,9 @@ public class MyException {
     /*
      * sql字段值唯一异常
      * */
-    @ExceptionHandler(SQLException.class)
+    @ExceptionHandler(DuplicateKeyException.class)
     @ResponseBody
-    public R exceptionHandler(SQLException e){
+    public R exceptionHandler(DuplicateKeyException e){
 
         log.info(e.getMessage());
 

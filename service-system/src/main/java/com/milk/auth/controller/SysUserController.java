@@ -8,6 +8,7 @@ import com.milk.auth.service.SysUserService;
 import com.milk.common.R;
 import com.milk.common.ResultEnum;
 import com.milk.model.params.UserPageParam;
+import com.milk.model.params.UserRoleParam;
 import com.milk.model.pojo.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description TODO
@@ -80,6 +82,24 @@ public class SysUserController {
     public R remove(@RequestBody List<Long> ids) {
         sysUserService.removeByIds(ids);
         return R.success("删除成功！");
+    }
+
+    @ApiOperation(value="根据用户id查询所拥有的的角色")
+    @GetMapping("/toRole/{userId}")
+    public R getRoleByUserId(@PathVariable Long userId){
+
+        Map<String,Object> map=sysUserService.getRoleByUserId(userId);
+
+        return R.success(map);
+    }
+
+    @ApiOperation(value="分配角色")
+    @PostMapping("/doRole")
+    public R getRoleByUserId(@RequestBody UserRoleParam userRoleParam){
+
+        sysUserService.doAssign(userRoleParam);
+
+        return R.success("分配成功！");
     }
 
 }
