@@ -8,7 +8,7 @@ import lombok.Data;
  * @Date 2022/11/2 20:54
  */
 @Data
-public class PageParam {
+public class RolePageParam {
 
     private Integer page;
 

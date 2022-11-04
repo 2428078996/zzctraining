@@ -5,12 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.milk.auth.mapper.SysRoleMapper;
 import com.milk.auth.service.SysRoleService;
-import com.milk.model.params.PageParam;
+import com.milk.model.params.RolePageParam;
 import com.milk.model.pojo.SysRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @Description TODO
@@ -23,10 +21,10 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Autowired
     private SysRoleMapper sysRoleMapper;
     @Override
-    public IPage<SysRole> pageList(PageParam pageParam) {
+    public IPage<SysRole> pageList(RolePageParam rolePageParam) {
 
-        Page<SysRole> page = new Page<>(pageParam.getPage(), pageParam.getPageSize());
-        IPage<SysRole> pageInfo = sysRoleMapper.pageList(page, pageParam.getQueryParams());
+        Page<SysRole> page = new Page<>(rolePageParam.getPage(), rolePageParam.getPageSize());
+        IPage<SysRole> pageInfo = sysRoleMapper.pageList(page, rolePageParam.getQueryParams());
         return pageInfo;
     }
 }

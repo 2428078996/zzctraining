@@ -1,15 +1,12 @@
 package com.milk.auth.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.milk.auth.exce.CustomerException;
 import com.milk.auth.service.SysRoleService;
 import com.milk.common.R;
-import com.milk.common.ResultEnum;
-import com.milk.model.params.PageParam;
+import com.milk.model.params.RolePageParam;
 import com.milk.model.pojo.SysRole;
 import com.milk.model.vo.SysRoleVo;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -42,10 +39,10 @@ public class SysRoleController {
 
     @ApiOperation(value="分页获取角色列表")
     @PostMapping("/list")
-    public R page(@RequestBody PageParam pageParam){
+    public R page(@RequestBody RolePageParam rolePageParam){
 
-        log.info("数据{}",pageParam);
-        IPage<SysRole> pageInfo = sysRoleService.pageList(pageParam);
+        log.info("数据{}", rolePageParam);
+        IPage<SysRole> pageInfo = sysRoleService.pageList(rolePageParam);
         return R.success(pageInfo);
     }
 
