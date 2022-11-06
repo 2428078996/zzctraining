@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.milk.auth.exce.CustomerException;
 import com.milk.auth.service.SysUserService;
+import com.milk.common.MD5Utils;
 import com.milk.common.R;
 import com.milk.common.ResultEnum;
 import com.milk.model.params.UserPageParam;
@@ -15,7 +16,9 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import sun.security.provider.MD5;
 
 import java.util.List;
 import java.util.Map;
@@ -66,6 +69,8 @@ public class SysUserController {
     @ApiOperation(value = "添加用户")
     @PostMapping("/save")
     public R save(@RequestBody SysUser user) {
+        String password = user.getPassword();
+        user.setPassword(MD5Utils.encrypt(password));;
         sysUserService.save(user);
         return R.success("添加成功！");
     }
@@ -84,7 +89,7 @@ public class SysUserController {
         return R.success("删除成功！");
     }
 
-    @ApiOperation(value="根据用户id查询所拥有的的角色")
+    @ApiOperation(value="根据用户id查询用户所拥有的的角色")
     @GetMapping("/toRole/{userId}")
     public R getRoleByUserId(@PathVariable Long userId){
 

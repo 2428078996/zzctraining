@@ -1,11 +1,12 @@
 package com.milk.auth.controller;
 
+import com.milk.auth.service.SysUserService;
 import com.milk.common.R;
+import com.milk.model.params.LoginParam;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,15 +21,20 @@ import java.util.Map;
 @RequestMapping("/admin/system/index")
 public class LoginController {
 
+    @Autowired
+    private SysUserService sysUserService;
+
     /**
      * 登录
      * @return
      */
+    @ApiOperation(value="登录")
     @PostMapping("/login")
-    public R login() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("token","admin");
-        return R.success(map);
+    public R login(@RequestBody LoginParam loginParam) {
+
+        String token=sysUserService.login(loginParam);
+
+        return R.success().add("token",token);
     }
     /**
      * 获取用户信息

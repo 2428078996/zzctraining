@@ -2,6 +2,7 @@ package com.milk.auth.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.milk.model.params.LoginParam;
 import com.milk.model.params.UserPageParam;
 import com.milk.model.params.UserRoleParam;
 import com.milk.model.pojo.SysUser;
@@ -23,4 +24,6 @@ public interface SysUserService extends IService<SysUser> {
     Map<String, Object> getRoleByUserId(Long userId);
 
     boolean doAssign(UserRoleParam userRoleParam);
+
+    String login(LoginParam loginParam);
 }

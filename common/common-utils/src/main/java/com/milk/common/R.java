@@ -2,6 +2,9 @@ package com.milk.common;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @Description TODO
  * @Author @Milk
@@ -14,6 +17,7 @@ public class R<T> {
     private boolean success;
     private String msg;
     private T data;
+    private Map<String,Object> map=new HashMap<>();
 
     public static<T> R<T> success(){
         R<T> r = new R<T>();
@@ -63,5 +67,10 @@ public class R<T> {
         r.setCode(resultEnum.getCode());
         r.setMsg(resultEnum.getMsg());
         return r;
+    }
+
+    public R add(String key,Object value){
+        this.map.put(key,value);
+        return this;
     }
 }

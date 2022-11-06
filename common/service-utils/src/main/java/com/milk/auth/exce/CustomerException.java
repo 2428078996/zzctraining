@@ -15,7 +15,11 @@ public class CustomerException extends RuntimeException {
 
     private String msg;
 
-    private CustomerException(Integer code,String msg){
+    private CustomerException(){
+
+    }
+
+    public CustomerException(Integer code, String msg){
         super(msg);
         this.code=code;
         this.msg=msg;

@@ -55,7 +55,7 @@ public class MyException {
     @ExceptionHandler(CustomerException.class)
     @ResponseBody
     public R error(CustomerException e){
-        e.printStackTrace();
+
         return R.fail(e.getCode(),e.getMsg());
     }
 }

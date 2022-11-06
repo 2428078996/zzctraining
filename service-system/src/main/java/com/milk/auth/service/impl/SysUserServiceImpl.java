@@ -10,7 +10,10 @@ import com.milk.auth.mapper.SysRoleMapper;
 import com.milk.auth.mapper.SysUserMapper;
 import com.milk.auth.mapper.SysUserRoleMapper;
 import com.milk.auth.service.SysUserService;
+import com.milk.common.MD5Utils;
 import com.milk.common.ResultEnum;
+import com.milk.common.TokenUtils;
+import com.milk.model.params.LoginParam;
 import com.milk.model.params.UserPageParam;
 import com.milk.model.params.UserRoleParam;
 import com.milk.model.pojo.SysRole;
@@ -19,6 +22,7 @@ import com.milk.model.pojo.SysUserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,7 +54,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         Page<SysUser> page = new Page<>(userPageParam.getPage(), userPageParam.getPageSize());
         IPage<SysUser> pageInfo = sysUserMapper.selectPage(page, userPageParam);
-
         return pageInfo;
     }
 
@@ -112,4 +115,34 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         return false;
     }
+
+    @Override
+    public String login(LoginParam loginParam) {
+
+        if (loginParam==null){
+            throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
+        }
+
+        SysUser user = this.getOne(new QueryWrapper<SysUser>().lambda().eq(SysUser::getUsername, loginParam.getUsername()));
+
+
+        if(user==null){
+            throw new CustomerException(ResultEnum.ACCOUNT_ERROR);
+        }
+
+        if (user.getStatus()==0){
+            throw new CustomerException(ResultEnum.ACCOUNT_STOP);
+        }
+        String password = user.getPassword();
+
+        if(!password.equals(MD5Utils.encrypt(loginParam.getPassword()))){
+            throw new CustomerException(ResultEnum.PASSWORD_ERROR);
+        }
+
+        String token = TokenUtils.createToken(user.getUsername(), Long.getLong(user.getId()));
+
+        return token;
+    }
+
+
 }
