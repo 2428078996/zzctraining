@@ -1,5 +1,6 @@
 package com.milk.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.milk.auth.exce.CustomerException;
@@ -11,6 +12,7 @@ import com.milk.common.TreeUtils;
 import com.milk.model.params.RoleMenuParam;
 import com.milk.model.pojo.SysMenu;
 import com.milk.model.pojo.SysRoleMenu;
+import com.milk.model.vo.RouterVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,7 +41,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         List<SysMenu> menuList = this.list();
 
 //        转换树形列表
-        List<SysMenu> sysMenus= TreeUtils.treeList(menuList);
+        List<SysMenu> sysMenus= TreeUtils.buildTree(menuList);
 
         return sysMenus;
     }
@@ -70,7 +72,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
             }
         }
         //将权限列表转换为权限树
-        List<SysMenu> sysMenus = TreeUtils.treeList(menuList);
+        List<SysMenu> sysMenus = TreeUtils.buildTree(menuList);
         return sysMenus;
     }
 
@@ -87,6 +89,49 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         sysRoleMenuMapper.addRoleMenu(roleMenuParam.getRoleId(),roleMenuParam.getMenuIdList());
 
         return true;
+    }
+
+    @Override
+    public List<RouterVo> findUserMenuList(Long userId) {
+
+        if (userId==null){
+            throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
+        }
+
+        List<SysMenu> sysMenus = null;
+//        超级管理员拥有所哟权限
+        if(userId==1){
+             sysMenus=sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,1));
+        }
+
+         sysMenus = sysMenuMapper.findUserRoleList(userId);
+        List<RouterVo> routerVoList = TreeUtils.buildRouters(sysMenus);
+        return routerVoList;
+    }
+
+    @Override
+    public List<String> findUserPermsList(Long userId) {
+
+        if (userId == null){
+            throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
+        }
+        List<SysMenu> sysMenus = null;
+//        超级管理员拥有所哟权限
+        if(userId==1){
+           sysMenus = sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,1));
+        }
+
+        sysMenus = sysMenuMapper.findUserRoleList(userId);
+
+        List<String> permissionList=new ArrayList<>();
+
+        for (SysMenu sysMenu : sysMenus) {
+            if (sysMenu.getType()==2){
+                permissionList.add(sysMenu.getPerms());
+            }
+
+        }
+        return permissionList;
     }
 
 }

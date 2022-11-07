@@ -1,5 +1,6 @@
 package com.milk.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -9,21 +10,26 @@ import com.milk.auth.exce.CustomerException;
 import com.milk.auth.mapper.SysRoleMapper;
 import com.milk.auth.mapper.SysUserMapper;
 import com.milk.auth.mapper.SysUserRoleMapper;
+import com.milk.auth.service.SysDeptService;
+import com.milk.auth.service.SysMenuService;
+import com.milk.auth.service.SysPostService;
 import com.milk.auth.service.SysUserService;
 import com.milk.common.MD5Utils;
+import com.milk.common.RequestUtils;
 import com.milk.common.ResultEnum;
 import com.milk.common.TokenUtils;
 import com.milk.model.params.LoginParam;
 import com.milk.model.params.UserPageParam;
 import com.milk.model.params.UserRoleParam;
-import com.milk.model.pojo.SysRole;
-import com.milk.model.pojo.SysUser;
-import com.milk.model.pojo.SysUserRole;
+import com.milk.model.pojo.*;
+import com.milk.model.vo.RouterVo;
+import com.milk.model.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +50,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysRoleMapper roleMapper;
     @Autowired
     private SysUserRoleMapper sysUserRoleMapper;
+    @Autowired
+    private SysMenuService sysMenuService;
+    @Autowired
+    private SysPostService sysPostService;
+    @Autowired
+    private SysDeptService sysDeptService;
 
 
     @Override
@@ -54,6 +66,29 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         Page<SysUser> page = new Page<>(userPageParam.getPage(), userPageParam.getPageSize());
         IPage<SysUser> pageInfo = sysUserMapper.selectPage(page, userPageParam);
+
+        List<SysUser> records = pageInfo.getRecords();
+        for (SysUser user : records) {
+
+            Long deptId = user.getDeptId();
+            if (deptId.longValue()==0){
+                user.setDeptName("暂未分配部门");
+            }else{
+                SysDept dept = sysDeptService.getById(deptId);
+                user.setDeptName(dept.getName());
+
+            }
+
+            Long postId = user.getPostId();
+            if (postId.longValue()==0){
+                user.setPostName("无岗位");
+            }else{
+                SysPost post = sysPostService.getById(postId);
+                user.setPostName(post.getName());
+            }
+
+        }
+        pageInfo.setRecords(records);
         return pageInfo;
     }
 
@@ -139,9 +174,44 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new CustomerException(ResultEnum.PASSWORD_ERROR);
         }
 
-        String token = TokenUtils.createToken(user.getUsername(), Long.getLong(user.getId()));
+        String token = TokenUtils.createToken(user.getUsername(),user.getId());
 
         return token;
+    }
+
+    @Override
+    public UserInfoVo getUserInfo() {
+
+        HttpServletRequest request = RequestUtils.getRequest();
+        String token = request.getHeader("token");
+        if (token == null){
+            throw new CustomerException(ResultEnum.LOGIN_AUTH);
+        }
+
+        String username=TokenUtils.getUsername(token);
+
+        SysUser user=this.getOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUsername,username));
+
+        if (user==null){
+            throw new CustomerException(ResultEnum.ACCOUNT_ERROR);
+        }
+
+        Long userId=user.getId();
+
+//        路由权限地址
+        List<RouterVo> userMenuList = sysMenuService.findUserMenuList(userId);
+
+//        按钮权限列表
+        List<String> userPermsList = sysMenuService.findUserPermsList(userId);
+
+        UserInfoVo userInfo = new UserInfoVo();
+
+        userInfo.setName(user.getName());
+        userInfo.setAvatar(user.getHeadUrl());
+        userInfo.setPermsList(userPermsList);
+        userInfo.setRouterVos(userMenuList);
+
+        return userInfo;
     }
 
 

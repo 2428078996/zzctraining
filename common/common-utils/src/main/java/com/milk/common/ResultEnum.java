@@ -21,11 +21,11 @@ public enum ResultEnum {
     REPEAT_SUBMIT(206, "重复提交"),
     ARGUMENT_VALID_ERROR(210, "参数校验异常"),
 
-    LOGIN_AUTH(208, "未登陆"),
+    LOGIN_AUTH(208, "未登陆或登录已过期"),
     PERMISSION(209, "没有权限"),
     ACCOUNT_ERROR(214, "账号不正确"),
     PASSWORD_ERROR(215, "密码不正确"),
-    LOGIN_MOBLE_ERROR( 216, "账号不正确"),
+    LOGIN_MOBILE_ERROR( 216, "账号不正确"),
     ACCOUNT_STOP( 217, "账号已停用"),
     NODE_ERROR( 218, "该节点下有子节点，不可以删除")
     ;

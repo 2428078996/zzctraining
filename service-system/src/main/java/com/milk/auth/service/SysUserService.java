@@ -6,6 +6,7 @@ import com.milk.model.params.LoginParam;
 import com.milk.model.params.UserPageParam;
 import com.milk.model.params.UserRoleParam;
 import com.milk.model.pojo.SysUser;
+import com.milk.model.vo.UserInfoVo;
 
 import java.util.Map;
 
@@ -26,4 +27,6 @@ public interface SysUserService extends IService<SysUser> {
     boolean doAssign(UserRoleParam userRoleParam);
 
     String login(LoginParam loginParam);
+
+    UserInfoVo getUserInfo();
 }

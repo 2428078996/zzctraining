@@ -1,6 +1,7 @@
 package com.milk.model.common;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,8 +13,9 @@ import java.util.Map;
 @Data
 public class BaseEntity implements Serializable {
 
-    //@TableId(type = IdType.AUTO)
-    private String id;
+    @TableId(type = IdType.AUTO)
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private Long id;
 
 
     @TableField(value = "create_time",fill = FieldFill.INSERT)
