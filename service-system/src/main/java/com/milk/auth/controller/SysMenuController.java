@@ -8,7 +8,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class SysMenuController {
     @Autowired
     private SysMenuService sysMenuService;
 
+    @PreAuthorize("hasAnyAuthority('bnt.sysMenu.list')")
     @ApiOperation(value = "获取菜单")
     @GetMapping("/treeList")
     public R findNodes() {
@@ -34,6 +37,8 @@ public class SysMenuController {
         return R.success(list);
     }
 
+
+    @PreAuthorize("hasAnyAuthority('bnt.sysMenu.add')")
     @ApiOperation(value = "新增菜单")
     @PostMapping("/save")
     public R save(@RequestBody SysMenu permission) {
@@ -41,6 +46,7 @@ public class SysMenuController {
         return R.success();
     }
 
+    @PreAuthorize("hasAnyAuthority('bnt.sysMenu.update')")
     @ApiOperation(value = "修改菜单")
     @PutMapping("/update")
     public R updateById(@RequestBody SysMenu permission) {
@@ -48,12 +54,24 @@ public class SysMenuController {
         return R.success();
     }
 
+
+    @PreAuthorize("hasAnyAuthority('bnt.sysMenu.remove')")
     @ApiOperation(value = "删除菜单")
     @DeleteMapping("/remove/{id}")
     public R remove(@PathVariable Long id) {
-        sysMenuService.removeById(id);
+        sysMenuService.removeMenu(id);
         return R.success();
     }
+
+    @PreAuthorize("hasAnyAuthority('bnt.sysMenu.status')")
+    @ApiOperation(value = "修改菜单状态")
+    @PostMapping("/{id}/{status}")
+    public R changeStatus(@PathVariable Long id ,@PathVariable Integer status) {
+        sysMenuService.changeStatus(id, status);
+        return R.success("状态修改成功！");
+    }
+
+
 
     @ApiOperation(value = "根据角色获取菜单")
     @GetMapping("/toAssign/{roleId}")

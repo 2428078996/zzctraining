@@ -20,7 +20,7 @@ public class UserInfoVo {
 
     private List<SysRole> roles;
 
-    private List<RouterVo> routerVos;
+    private List<RouterVo> routers;
 
-    private List<String> permsList;
+    private List<String> buttons;
 }

@@ -27,7 +27,7 @@ public enum ResultEnum {
     PASSWORD_ERROR(215, "密码不正确"),
     LOGIN_MOBILE_ERROR( 216, "账号不正确"),
     ACCOUNT_STOP( 217, "账号已停用"),
-    NODE_ERROR( 218, "该节点下有子节点，不可以删除")
+    NODE_ERROR( 218, "该节点下有子节点，不可以操作")
     ;
 
     private Integer code;

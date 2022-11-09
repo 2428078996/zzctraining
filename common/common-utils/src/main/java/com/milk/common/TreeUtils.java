@@ -1,10 +1,11 @@
 package com.milk.common;
 
+import com.milk.model.pojo.SysDept;
 import com.milk.model.pojo.SysMenu;
 import com.milk.model.vo.MetaVo;
 import com.milk.model.vo.RouterVo;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -22,7 +23,7 @@ public class TreeUtils {
 
         List<SysMenu> sysMenus=new ArrayList<>();
         for (SysMenu sysMenu : menuList) {
-            if (sysMenu.getParentId() == 0){
+            if (sysMenu.getParentId().intValue() == 0){
                 sysMenus.add(findChildren(sysMenu,menuList));
             }
         }
@@ -36,8 +37,6 @@ public class TreeUtils {
      * @return
      */
     public static List<RouterVo> buildRouters(List<SysMenu> menus) {
-//        构建树形菜单列表
-        menus=buildTree(menus);
         List<RouterVo> routers = new LinkedList<RouterVo>();
         for (SysMenu menu : menus) {
             RouterVo router = new RouterVo();
@@ -49,7 +48,7 @@ public class TreeUtils {
             List<SysMenu> children = menu.getChildren();
             //如果当前是菜单，需将按钮对应的路由加载出来，如：“角色授权”按钮对应的路由在“系统管理”下面
             if(menu.getType().intValue() == 1) {
-                List<SysMenu> hiddenMenuList = children.stream().filter(item -> !StringUtils.isEmpty(item.getComponent())).collect(Collectors.toList());
+                List<SysMenu> hiddenMenuList = children.stream().filter(item -> !Strings.isEmpty(item.getComponent())).collect(Collectors.toList());
                 for (SysMenu hiddenMenu : hiddenMenuList) {
                     RouterVo hiddenRouter = new RouterVo();
                     hiddenRouter.setHidden(true);
@@ -92,7 +91,7 @@ public class TreeUtils {
 
         for (SysMenu menu : menuList) {
 
-            if(sysMenu.getId().equals(menu.getParentId().toString()) ) {
+            if(Long.valueOf(sysMenu.getId()) == menu.getParentId().longValue() ) {
                 if (sysMenu.getChildren() == null) {
                     sysMenu.setChildren(new ArrayList<>());
                 }
@@ -101,5 +100,38 @@ public class TreeUtils {
 
         }
         return sysMenu;
+    }
+
+    public static List<SysDept> buildDeptTree(List<SysDept> deptList) {
+
+        List<SysDept> sysDeptList=new ArrayList<>();
+
+        for (SysDept sysDept : deptList) {
+
+            if (sysDept.getParentId().longValue()==0){
+                sysDeptList.add(findDeptChildren(sysDept,deptList));
+            }
+        }
+
+        return sysDeptList;
+    }
+
+    private static SysDept findDeptChildren(SysDept sysDept, List<SysDept> deptList) {
+
+        sysDept.setChildren(new ArrayList<>());
+
+        for (SysDept dept : deptList) {
+
+            if (sysDept.getId().equals(dept.getParentId().toString())){
+
+                if (sysDept.getChildren()==null){
+                    sysDept.setChildren(new ArrayList<>());
+                }
+                sysDept.getChildren().add(findDeptChildren(dept,deptList));
+            }
+        }
+
+        return sysDept;
+
     }
 }

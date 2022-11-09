@@ -56,8 +56,11 @@ public class LoginController {
      * 退出
      * @return
      */
+    @ApiOperation(value = "退出操作")
     @PostMapping("/logout")
     public R logout(){
+        sysUserService.logout();
+
         return R.success();
     }
 

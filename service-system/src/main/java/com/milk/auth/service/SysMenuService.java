@@ -24,4 +24,8 @@ public interface SysMenuService extends IService<SysMenu> {
 
     List<String> findUserPermsList(Long userId);
 
+    boolean changeStatus(Long id, Integer status);
+
+    boolean removeMenu(Long id);
+
 }

@@ -60,7 +60,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         //获取该角色已分配的所有权限id
         List<String> roleMenuIds = new ArrayList<>();
         for (SysRoleMenu roleMenu : roleMenus) {
-            roleMenuIds.add(roleMenu.getMenuId());
+            roleMenuIds.add(roleMenu.getMenuId().toString());
         }
         //遍历所有权限列表
         for (SysMenu sysMenu : menuList) {
@@ -94,7 +94,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
     @Override
     public List<RouterVo> findUserMenuList(Long userId) {
 
-        if (userId==null){
+        if (userId == 0){
             throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
         }
 
@@ -102,9 +102,11 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
 //        超级管理员拥有所哟权限
         if(userId==1){
              sysMenus=sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,1));
+        }else{
+            sysMenus = sysMenuMapper.findUserRoleList(userId);
         }
 
-         sysMenus = sysMenuMapper.findUserRoleList(userId);
+        sysMenus = TreeUtils.buildTree(sysMenus);
         List<RouterVo> routerVoList = TreeUtils.buildRouters(sysMenus);
         return routerVoList;
     }
@@ -112,16 +114,16 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
     @Override
     public List<String> findUserPermsList(Long userId) {
 
-        if (userId == null){
+        if (userId == 0){
             throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
         }
         List<SysMenu> sysMenus = null;
 //        超级管理员拥有所哟权限
         if(userId==1){
            sysMenus = sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,1));
+        }else{
+            sysMenus = sysMenuMapper.findUserRoleList(userId);
         }
-
-        sysMenus = sysMenuMapper.findUserRoleList(userId);
 
         List<String> permissionList=new ArrayList<>();
 
@@ -132,6 +134,34 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
 
         }
         return permissionList;
+    }
+
+    @Override
+    public boolean changeStatus(Long id, Integer status) {
+
+        int count = this.count(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, id).eq(SysMenu::getStatus,1));
+        if (count >0 ){
+            throw new CustomerException(ResultEnum.NODE_ERROR);
+        }
+
+        SysMenu menu = new SysMenu();
+        menu.setId(id.toString());
+
+        menu.setStatus(status==1 ? 0 : 1);
+
+        this.updateById(menu);
+        return true;
+    }
+
+    @Override
+    public boolean removeMenu(Long id) {
+
+        int count= this.count(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getParentId, id).eq(SysMenu::getStatus,1));
+        if (count >0 ){
+            throw new CustomerException(ResultEnum.NODE_ERROR);
+        }
+        this.removeById(id);
+        return true;
     }
 
 }

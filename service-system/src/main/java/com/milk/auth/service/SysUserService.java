@@ -29,4 +29,6 @@ public interface SysUserService extends IService<SysUser> {
     String login(LoginParam loginParam);
 
     UserInfoVo getUserInfo();
+
+    boolean logout();
 }

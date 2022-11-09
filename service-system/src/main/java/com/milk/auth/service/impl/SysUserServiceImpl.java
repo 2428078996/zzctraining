@@ -25,6 +25,7 @@ import com.milk.model.pojo.*;
 import com.milk.model.vo.RouterVo;
 import com.milk.model.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -56,6 +57,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private SysPostService sysPostService;
     @Autowired
     private SysDeptService sysDeptService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
 
     @Override
@@ -76,7 +79,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             }else{
                 SysDept dept = sysDeptService.getById(deptId);
                 user.setDeptName(dept.getName());
-
             }
 
             Long postId = user.getPostId();
@@ -121,6 +123,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         QueryWrapper<SysRole> queryWrapper=new QueryWrapper<>();
         queryWrapper.lambda().select(SysRole::getId,SysRole::getRoleName);
         List<SysRole> roleList = roleMapper.selectList(queryWrapper);
+
         map.put("allRole",roleList);
 
 
@@ -129,7 +132,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         List<SysUserRole> userRoleList = sysUserRoleMapper.selectList(userRoleWrapper);
         List<String> ids=new ArrayList<>();
         for (SysUserRole sysUserRole : userRoleList) {
-            ids.add(sysUserRole.getRoleId());
+            ids.add(sysUserRole.getRoleId().toString());
         }
 
         map.put("userRoleIds",ids);
@@ -196,7 +199,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             throw new CustomerException(ResultEnum.ACCOUNT_ERROR);
         }
 
-        Long userId=user.getId();
+        Long userId=Long.valueOf(user.getId());
 
 //        路由权限地址
         List<RouterVo> userMenuList = sysMenuService.findUserMenuList(userId);
@@ -208,10 +211,20 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         userInfo.setName(user.getName());
         userInfo.setAvatar(user.getHeadUrl());
-        userInfo.setPermsList(userPermsList);
-        userInfo.setRouterVos(userMenuList);
+        userInfo.setButtons(userPermsList);
+        userInfo.setRouters(userMenuList);
 
         return userInfo;
+    }
+
+    @Override
+    public boolean logout() {
+
+        HttpServletRequest request = RequestUtils.getRequest();
+        String token = request.getHeader("token");
+        String username = TokenUtils.getUsername(token);
+        redisTemplate.delete(username);
+        return true;
     }
 
 

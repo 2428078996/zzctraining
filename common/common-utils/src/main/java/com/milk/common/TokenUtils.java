@@ -20,7 +20,7 @@ public class TokenUtils {
 
     private static final String SING_KEY="auth-user";
 
-    public static String createToken(String username,Long userId){
+    public static String createToken(String username,String userId){
 
         String token= Jwts.builder()
                 .claim("username",username)
@@ -66,13 +66,5 @@ public class TokenUtils {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public static void main(String[] args) {
-        String token = TokenUtils.createToken("李梦坤", 12345679632588L);
-        System.out.println(token);
-
-        System.out.println(TokenUtils.getUserId(token));
-        System.out.println(TokenUtils.getUsername(token));
     }
 }

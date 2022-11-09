@@ -2,6 +2,7 @@ package com.milk.model.pojo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.milk.model.common.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,10 +17,10 @@ public class SysUserRole extends BaseEntity {
 
 	@ApiModelProperty(value = "角色id")
 	@TableField("role_id")
-	private String roleId;
+	private Long roleId;
 
 	@ApiModelProperty(value = "用户id")
 	@TableField("user_id")
-	private String userId;
+	private Long userId;
 }
 
