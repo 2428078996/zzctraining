@@ -40,7 +40,7 @@ public class SysDeptController {
     @ApiOperation(value = "新增部门")
     @PostMapping("/save")
     public R save(@RequestBody SysDept permission) {
-        sysDeptService.save(permission);
+        sysDeptService.saveDept(permission);
         return R.success("添加成功");
     }
 

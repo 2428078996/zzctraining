@@ -60,7 +60,6 @@ public class LoginController {
     @PostMapping("/logout")
     public R logout(){
         sysUserService.logout();
-
         return R.success();
     }
 

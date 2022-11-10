@@ -56,4 +56,18 @@ public class SysDeptServiceImpl extends ServiceImpl<SysDeptMapper, SysDept> impl
         this.updateById(dept);
         return true;
     }
+
+    @Override
+    public boolean saveDept(SysDept dept) {
+        String treePath = dept.getTreePath();
+
+        this.save(dept);
+
+        treePath=treePath+dept.getId()+",";
+
+        dept.setTreePath(treePath);
+        this.updateById(dept);
+
+        return true;
+    }
 }

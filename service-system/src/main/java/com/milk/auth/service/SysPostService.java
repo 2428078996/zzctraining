@@ -18,4 +18,5 @@ public interface SysPostService extends IService<SysPost> {
     boolean updateStatus(Long id, Integer status);
 
     SysPostVo getPostById(Long id);
+
 }

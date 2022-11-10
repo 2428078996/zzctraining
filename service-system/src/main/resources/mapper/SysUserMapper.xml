@@ -10,25 +10,25 @@
 
     <!-- 用于select查询公用抽取的列 -->
     <sql id="columns">
-        id,username,name,phone,head_url,post_id,dept_id,description,status,create_time,update_time,is_deleted
+        u.*,p.name as post_name,d.name as dept_name
     </sql>
 
     <select id="selectPage" resultMap="SysUserMap" parameterType="com.milk.model.params.UserPageParam">
         select <include refid="columns" />
-        from sys_user
+        from sys_user u join sys_post p on u.post_id=p.id left join sys_dept d on u.dept_id = d.id
         <where>
             <if test="user.keyword != null and user.keyword != ''">
-                and (username like CONCAT('%',#{user.keyword},'%') or  name like CONCAT('%',#{user.keyword},'%') or phone like CONCAT('%',#{user.phone},'%'))
+                and (u.username like CONCAT('%',#{user.keyword},'%') or  u.name like CONCAT('%',#{user.keyword},'%') or phone like CONCAT('%',#{user.phone},'%'))
             </if>
             <if test="user.createTimeBegin != null and user.createTimeBegin != ''">
-                and create_time &gt;= #{user.createTimeBegin}
+                and u.create_time &gt;= #{user.createTimeBegin}
             </if>
             <if test="user.createTimeEnd != null and user.createTimeEnd != ''">
-                and create_time &lt;= #{user.createTimeEnd}
+                and u.create_time &lt;= #{user.createTimeEnd}
             </if>
-            and is_deleted = 0
+            and u.is_deleted = 0
         </where>
-        order by id desc
+        order by u.update_time asc
     </select>
 
 </mapper>

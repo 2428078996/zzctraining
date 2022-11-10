@@ -1,7 +1,5 @@
 package com.milk.auth.service;
 
-import com.milk.model.vo.LoginLogVo;
-
 /**
  * @Description TODO
  * @Author @Milk

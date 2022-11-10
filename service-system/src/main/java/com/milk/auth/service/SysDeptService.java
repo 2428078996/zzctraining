@@ -16,4 +16,6 @@ public interface SysDeptService extends IService<SysDept> {
     boolean removeMenu(Long id);
 
     boolean changeStatus(Long id, Integer status);
+
+    boolean saveDept(SysDept permission);
 }

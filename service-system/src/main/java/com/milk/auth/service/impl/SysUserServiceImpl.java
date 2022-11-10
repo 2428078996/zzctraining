@@ -24,6 +24,8 @@ import com.milk.model.params.UserRoleParam;
 import com.milk.model.pojo.*;
 import com.milk.model.vo.RouterVo;
 import com.milk.model.vo.UserInfoVo;
+import com.sun.javafx.collections.MappingChange;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -43,6 +45,7 @@ import java.util.Map;
  */
 @Service
 @Transactional
+@Slf4j
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements SysUserService {
 
     @Autowired
@@ -71,27 +74,46 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         IPage<SysUser> pageInfo = sysUserMapper.selectPage(page, userPageParam);
 
         List<SysUser> records = pageInfo.getRecords();
+
+        List<SysDept> deptList = sysDeptService.list();
+
         for (SysUser user : records) {
 
-            Long deptId = user.getDeptId();
-            if (deptId.longValue()==0){
-                user.setDeptName("暂未分配部门");
-            }else{
-                SysDept dept = sysDeptService.getById(deptId);
-                user.setDeptName(dept.getName());
+            if (user.getDeptId().longValue()==0){
+                user.setDeptName("无部门");
+            }
+            if (user.getDeptId().longValue()!=0){
+                user.setDeptName(createDeptName(user.getDeptId(),deptList));
             }
 
-            Long postId = user.getPostId();
-            if (postId.longValue()==0){
-                user.setPostName("无岗位");
-            }else{
-                SysPost post = sysPostService.getById(postId);
-                user.setPostName(post.getName());
-            }
 
         }
+
         pageInfo.setRecords(records);
+
+        log.info("数据：{}",pageInfo);
         return pageInfo;
+    }
+
+    private String createDeptName(Long deptId, List<SysDept> deptList) {
+
+        Map<String, String> map = new HashMap<>();
+        String[] ids =null;
+        String deptName="";
+        for (SysDept dept : deptList) {
+            map.put(dept.getId(),dept.getName());
+            if(deptId.toString().equals(dept.getId())){
+                String treePath = dept.getTreePath();
+                ids = treePath.split(",");
+            }
+        }
+        for (String id : ids) {
+            if (map.get(id)!=null){
+                deptName=deptName+map.get(id)+"-->";
+            }
+        }
+
+        return deptName;
     }
 
     @Override

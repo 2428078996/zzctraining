@@ -3,11 +3,9 @@ package com.milk.auth.service.impl;
 import com.milk.auth.mapper.SysLoginLogMapper;
 import com.milk.auth.service.AsyncLoginLogService;
 import com.milk.model.pojo.SysLoginLog;
-import com.milk.model.vo.LoginLogVo;
-import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 
 /**
  * @Description TODO
@@ -17,7 +15,7 @@ import javax.annotation.Resource;
 @Service
 public class AsyncLoginLogServiceImpl implements AsyncLoginLogService {
 
-    @Resource
+    @Autowired
     private SysLoginLogMapper sysLoginLogMapper;
 
     @Override

@@ -1,5 +1,7 @@
 package com.milk.auth.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.milk.auth.service.SysPostService;
@@ -46,6 +48,19 @@ public class SysPostController {
         Page<SysPost> pageInfo = sysPostService.selectPage(postPageParam);
 
         return R.success(pageInfo);
+    }
+
+    @ApiOperation(value = "获取所有岗位")
+    @PostMapping("/all")
+    public R getAll() {
+
+        LambdaQueryWrapper<SysPost> queryWrapper=new LambdaQueryWrapper<>();
+
+        queryWrapper.select(SysPost::getName,SysPost::getId);
+
+        List<SysPost> postList = sysPostService.list(queryWrapper);
+
+        return R.success(postList);
     }
 
     @ApiOperation(value = "根据ID获取岗位")

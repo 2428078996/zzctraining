@@ -6,8 +6,8 @@ import com.milk.auth.service.AsyncLoginLogService;
 import com.milk.common.*;
 import com.milk.model.params.LoginParam;
 import com.milk.auth.custom.CustomUser;
-import com.milk.model.vo.LoginLogVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,9 +16,13 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,15 +37,17 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
 
     private RedisTemplate redisTemplate;
 
-    private AsyncLoginLogService loginLogService;
+    private AsyncLoginLogService asyncLoginLogService;
 
-    public TokenLoginFilter(AuthenticationManager authenticationManager, RedisTemplate redisTemplate) {
+
+    public TokenLoginFilter(AuthenticationManager authenticationManager, RedisTemplate redisTemplate,AsyncLoginLogService asyncLoginLogService) {
         this.setAuthenticationManager(authenticationManager);
         this.setPostOnly(false);
         //指定登录接口及提交方式，可以指定任意路径
         this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/admin/system/index/login","POST"));
 
         this.redisTemplate=redisTemplate;
+        this.asyncLoginLogService=asyncLoginLogService;
     }
 
     /*
@@ -79,7 +85,7 @@ public class TokenLoginFilter extends UsernamePasswordAuthenticationFilter {
         redisTemplate.opsForValue().set(customUser.getSysUser().getUsername(), JSON.toJSONString(authorities));
 
         //记录日志
-        loginLogService.recordLoginLog(customUser.getUsername(), 1, IpUtils.getIpAddress(request), "登录成功");
+        asyncLoginLogService.recordLoginLog(customUser.getUsername(), 1, IpUtils.getIpAddress(request), "登录成功");
 
         ResponseUtils.out(response, R.success().add("token",token));
 

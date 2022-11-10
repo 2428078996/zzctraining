@@ -1,6 +1,8 @@
 package com.milk.auth.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.milk.auth.annotation.Log;
+import com.milk.auth.enums.BusinessType;
 import com.milk.auth.service.SysRoleService;
 import com.milk.common.R;
 import com.milk.model.params.RolePageParam;
@@ -57,6 +59,7 @@ public class SysRoleController {
 
 
 
+    @Log(title = "角色管理", businessType = BusinessType.DELETE)
     @ApiOperation(value="根据id删除角色")
     @DeleteMapping("/del/{id}")
     public R<SysRole> delByRoleId(@PathVariable("id") Long id){
@@ -65,6 +68,7 @@ public class SysRoleController {
 
     }
 
+    @Log(title = "角色管理", businessType = BusinessType.DELETE)
     @ApiOperation(value="根据id批量删除角色")
     @DeleteMapping("/del")
     public R<SysRole> bathDelRole(@RequestBody List<Long> ids){
@@ -72,6 +76,7 @@ public class SysRoleController {
         return R.success("批量删除成功！");
     }
 
+    @Log(title = "角色管理", businessType = BusinessType.INSERT)
     @PostMapping("/save")
     @ApiOperation(value="添加角色信息")
     public R save(@RequestBody SysRole sysRole){
@@ -80,6 +85,7 @@ public class SysRoleController {
     }
 
 
+    @Log(title = "角色管理", businessType = BusinessType.UPDATE)
     @PutMapping("/update")
     @ApiOperation(value="修改角色信息")
     public R update(@RequestBody SysRole sysRole){

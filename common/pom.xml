@@ -15,6 +15,7 @@
         <module>common-utils</module>
         <module>service-utils</module>
         <module>spring-security</module>
+        <module>common-log</module>
     </modules>
 
 
