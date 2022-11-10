@@ -1,5 +1,8 @@
 package com.milk.auth.controller;
 
+import com.milk.auth.annotation.CacheAuth;
+import com.milk.auth.annotation.Log;
+import com.milk.auth.enums.BusinessType;
 import com.milk.auth.service.SysMenuService;
 import com.milk.common.R;
 import com.milk.model.params.RoleMenuParam;
@@ -29,6 +32,7 @@ public class SysMenuController {
     @Autowired
     private SysMenuService sysMenuService;
 
+    @CacheAuth(name = "菜单模块")
     @PreAuthorize("hasAnyAuthority('bnt.sysMenu.list')")
     @ApiOperation(value = "获取菜单")
     @GetMapping("/treeList")
@@ -80,6 +84,7 @@ public class SysMenuController {
         return R.success(sysMenuList);
     }
 
+    @Log(title = "角色模块",businessType = BusinessType.ASSGIN,isSaveRequestData = true,isSaveResponseData = true)
     @ApiOperation(value = "给角色分配权限")
     @PostMapping("/doAssign")
     public R doAssign(@RequestBody RoleMenuParam roleMenuParam) {

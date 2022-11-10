@@ -241,7 +241,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     @Override
     public boolean logout() {
-
         HttpServletRequest request = RequestUtils.getRequest();
         String token = request.getHeader("token");
         String username = TokenUtils.getUsername(token);
