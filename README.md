@@ -26,17 +26,17 @@
 #### 使用说明
 
 1.  后端权限控制  在方法上加注解
-``
+```
 @PreAuthorize("hasAnyAuthority('bnt.sysMenu.add')")
-``
+```
 2.  前端权限控制  在按钮加
-``:disabled="$hasBP('bnt.sysMenu.update') === false"``
+```:disabled="$hasBP('bnt.sysMenu.update') === false"```
 3.  记录日志 在方法上加注解
-`` @Log(title = "角色模块",businessType = BusinessType.ASSGIN,isSaveRequestData = true,isSaveResponseData = true)
-``
+``` @Log(title = "角色模块",businessType = BusinessType.ASSGIN,isSaveRequestData = true,isSaveResponseData = true)
+```
 4. 添加缓存
-``@CacheAuth(name="操作模块",overtime=1*60*60*1000")
-默认缓存一小时``
+```@CacheAuth(name="操作模块",overtime=1*60*60*1000")
+默认缓存一小时```
 
 
 #### 参与贡献
