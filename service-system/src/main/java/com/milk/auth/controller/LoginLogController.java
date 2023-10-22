@@ -2,7 +2,6 @@ package com.milk.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.milk.auth.service.AsyncLoginLogService;
 import com.milk.auth.service.SysLoginLogService;
 import com.milk.common.R;
 import com.milk.model.params.LoginLogParam;

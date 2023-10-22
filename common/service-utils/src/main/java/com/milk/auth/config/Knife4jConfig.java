@@ -36,7 +36,7 @@ public class Knife4jConfig {
                 .title("权限项目 后台服务API接口文档")
                 .description("北北阿姨爱若楠")
                 .termsOfServiceUrl("http://localhost:8802/")
-                .contact(new Contact("beibeiAunt","",""))
+                .contact(new Contact("beibei00","",""))
                 .version("1.0.0")
                 .build();
     }

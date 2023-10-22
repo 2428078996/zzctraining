@@ -13,12 +13,14 @@ import com.milk.model.params.RoleMenuParam;
 import com.milk.model.pojo.SysMenu;
 import com.milk.model.pojo.SysRoleMenu;
 import com.milk.model.vo.RouterVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Description TODO
@@ -27,6 +29,7 @@ import java.util.List;
  */
 @Transactional
 @Service
+@Slf4j
 public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> implements SysMenuService {
 
     @Autowired
@@ -94,12 +97,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
     @Override
     public List<RouterVo> findUserMenuList(Long userId) {
 
-        if (userId == 0){
-            throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
-        }
-
         List<SysMenu> sysMenus = null;
-//        超级管理员拥有所哟权限
+//      超级管理员拥有所哟权限
         if(userId==1){
              sysMenus=sysMenuMapper.selectList(new LambdaQueryWrapper<SysMenu>().eq(SysMenu::getStatus,1));
         }else{
@@ -107,6 +106,7 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         }
 
         sysMenus = TreeUtils.buildTree(sysMenus);
+        log.info("Tree后:{}",sysMenus);
         List<RouterVo> routerVoList = TreeUtils.buildRouters(sysMenus);
         return routerVoList;
     }
@@ -114,9 +114,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
     @Override
     public List<String> findUserPermsList(Long userId) {
 
-        if (userId == 0){
-            throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
-        }
         List<SysMenu> sysMenus = null;
 //        超级管理员拥有所哟权限
         if(userId==1){
@@ -125,14 +122,10 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
             sysMenus = sysMenuMapper.findUserRoleList(userId);
         }
 
-        List<String> permissionList=new ArrayList<>();
-
-        for (SysMenu sysMenu : sysMenus) {
-            if (sysMenu.getType()==2){
-                permissionList.add(sysMenu.getPerms());
-            }
-
-        }
+        List<String> permissionList = sysMenus.stream()
+                .filter(item -> item.getType() ==2)
+                .map(item -> item.getPerms())
+                .collect(Collectors.toList());
         return permissionList;
     }
 

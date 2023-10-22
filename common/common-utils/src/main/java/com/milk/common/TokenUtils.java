@@ -1,9 +1,7 @@
 package com.milk.common;
 
 import io.jsonwebtoken.*;
-import lombok.experimental.Helper;
-import org.apache.logging.log4j.util.Strings;
-import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 
@@ -33,18 +31,16 @@ public class TokenUtils {
         return token;
     }
 
-    public static Long getUserId(String token){
+    public static String getUserId(String token){
 
         try {
-            if (Strings.isEmpty(token)){
+            if (StringUtils.isEmpty(token)){
                 return null;
             }
 
             Jws<Claims> claims = Jwts.parser().setSigningKey(SING_KEY).parseClaimsJws(token);
 
-            Long userId=(Long) claims.getBody().get("userId");
-
-            return userId;
+            return (String)claims.getBody().get("userId");
 
         }catch (Exception e){
             e.printStackTrace();
@@ -55,7 +51,7 @@ public class TokenUtils {
     public static String getUsername(String token){
 
         try {
-            if (Strings.isEmpty(token)){
+            if (StringUtils.isEmpty(token)){
                 return null;
             }
 

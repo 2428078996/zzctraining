@@ -20,7 +20,6 @@ import java.nio.charset.Charset;
 @Slf4j
 public class WebMvcConfig implements WebMvcConfigurer {
 
-
     @Bean
     FastJsonHttpMessageConverter fastJsonHttpMessageConverter(){
         log.info("添加消息转换器");

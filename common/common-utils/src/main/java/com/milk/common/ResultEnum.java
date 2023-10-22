@@ -1,8 +1,6 @@
 package com.milk.common;
 
-import lombok.Data;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @Description TODO
@@ -13,12 +11,13 @@ import lombok.Setter;
 public enum ResultEnum {
 
     SUCCESS(200,"成功"),
-    FAIL(201, "失败"),
-    SERVICE_ERROR(2012, "服务异常"),
-    DATA_ERROR(204, "数据异常"),
+    FAIL(500, "失败"),
     SYS_ERROR(999,"系统异常"),
+    SERVICE_ERROR(201, "服务异常"),
+    DATA_ERROR(204, "数据异常"),
     ILLEGAL_REQUEST(205, "非法请求"),
     REPEAT_SUBMIT(206, "重复提交"),
+    VERIFY_CODE_ERROR(207, "验证码错误"),
     ARGUMENT_VALID_ERROR(210, "参数校验异常"),
 
     LOGIN_AUTH(208, "未登陆或登录已过期"),

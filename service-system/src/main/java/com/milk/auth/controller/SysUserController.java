@@ -1,24 +1,17 @@
 package com.milk.auth.controller;
 
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.milk.auth.exce.CustomerException;
 import com.milk.auth.service.SysUserService;
 import com.milk.common.MD5Utils;
 import com.milk.common.R;
-import com.milk.common.ResultEnum;
 import com.milk.model.params.UserPageParam;
 import com.milk.model.params.UserRoleParam;
 import com.milk.model.pojo.SysUser;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
-import sun.security.provider.MD5;
 
 import java.util.List;
 import java.util.Map;

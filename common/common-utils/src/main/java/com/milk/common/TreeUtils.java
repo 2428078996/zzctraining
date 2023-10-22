@@ -19,15 +19,14 @@ import java.util.stream.Collectors;
  */
 public class TreeUtils {
 
-    public static List<SysMenu> buildTree( List<SysMenu> menuList){
+    public static List<SysMenu> buildTree(List<SysMenu> menuList){
 
-        List<SysMenu> sysMenus=new ArrayList<>();
-        for (SysMenu sysMenu : menuList) {
-            if (sysMenu.getParentId().intValue() == 0){
-                sysMenus.add(findChildren(sysMenu,menuList));
-            }
-        }
-
+        List<SysMenu> sysMenus = menuList.stream().filter(menu -> {
+            return menu.getParentId() == 0;
+        }).map(menu -> {
+             menu.setChildren(findChildren(menu, menuList));
+             return menu;
+        }).collect(Collectors.toList());
         return sysMenus;
     }
 
@@ -85,21 +84,15 @@ public class TreeUtils {
         return routerPath;
     }
 
-    private static SysMenu findChildren(SysMenu sysMenu, List<SysMenu> menuList) {
+    private static List<SysMenu> findChildren(SysMenu sysMenu, List<SysMenu> menuList) {
 
-        sysMenu.setChildren(new ArrayList<SysMenu>());
-
-        for (SysMenu menu : menuList) {
-
-            if(Long.valueOf(sysMenu.getId()) == menu.getParentId().longValue() ) {
-                if (sysMenu.getChildren() == null) {
-                    sysMenu.setChildren(new ArrayList<>());
-                }
-                sysMenu.getChildren().add(findChildren(menu,menuList));
-            }
-
-        }
-        return sysMenu;
+        List<SysMenu> sysMenuList = menuList.stream().filter(menu -> {
+            return menu.getParentId().toString().equals(sysMenu.getId());
+        }).map(menu -> {
+            menu.setChildren(findChildren(menu, menuList));
+            return menu;
+        }).collect(Collectors.toList());
+        return sysMenuList;
     }
 
     public static List<SysDept> buildDeptTree(List<SysDept> deptList) {

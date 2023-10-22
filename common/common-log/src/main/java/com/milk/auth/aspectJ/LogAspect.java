@@ -12,7 +12,6 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -22,7 +21,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.ref.ReferenceQueue;
 import java.util.Collection;
 import java.util.Map;
 
@@ -54,8 +52,6 @@ public class LogAspect {
     }
 
     protected void handleLog(JoinPoint joinPoint, Log contrLog, Object jsonResult,Exception e) {
-
-
 
         try {
             HttpServletRequest request = RequestUtils.getRequest();

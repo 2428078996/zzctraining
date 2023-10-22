@@ -6,7 +6,6 @@ import org.springframework.http.MediaType;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.AccessibleObject;
 
 /**
  * @Description TODO
@@ -14,8 +13,6 @@ import java.lang.reflect.AccessibleObject;
  * @Date 2022/11/8 11:18
  */
 public class ResponseUtils {
-
-
 
     public static void out(HttpServletResponse response,R r){
 

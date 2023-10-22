@@ -7,7 +7,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,7 +26,7 @@ public class SysDeptController {
     @Autowired
     private SysDeptService sysDeptService;
 
-    @PreAuthorize("hasAnyAuthority('bnt.sysDept.list')")
+
     @ApiOperation(value = "获取部门")
     @GetMapping("/list")
     public R findNodes() {
@@ -36,7 +35,7 @@ public class SysDeptController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('bnt.sysDept.add')")
+
     @ApiOperation(value = "新增部门")
     @PostMapping("/save")
     public R save(@RequestBody SysDept permission) {
@@ -44,7 +43,7 @@ public class SysDeptController {
         return R.success("添加成功");
     }
 
-    @PreAuthorize("hasAnyAuthority('bnt.sysDept.update')")
+
     @ApiOperation(value = "修改部门信息")
     @PutMapping("/update")
     public R updateById(@RequestBody SysDept permission) {
@@ -53,7 +52,7 @@ public class SysDeptController {
     }
 
 
-    @PreAuthorize("hasAnyAuthority('bnt.sysDept.remove')")
+
     @ApiOperation(value = "删除部门")
     @DeleteMapping("/remove/{id}")
     public R remove(@PathVariable Long id) {
@@ -61,7 +60,7 @@ public class SysDeptController {
         return R.success();
     }
 
-    @PreAuthorize("hasAnyAuthority('bnt.sysDept.status')")
+
     @ApiOperation(value = "修改部门状态")
     @PostMapping("/{id}/{status}")
     public R changeStatus(@PathVariable Long id ,@PathVariable Integer status) {
