@@ -1,17 +1,22 @@
 # milk_auth
 
+### 即将开发
+1、登录日志
+2、权限校验
+3、操作日志
+
 #### 介绍
 权限管理是所有后台系统都会涉及的一个重要组成部分，而权限管理的核心流程是相似的，如果每个后台单独开发一套权限管理系统，就是重复造轮子，是人力的极大浪费，本项目就是针对这个问题，提供了一套通用的权限解决方案。
 
 #### 软件架构
-项目服务器端架构：SpringBoot + MyBatisPlus + SpringSecurity
+项目服务器端架构：SpringBoot + MyBatisPlus + sa-token + Redis
 前端架构：Node.js + Npm + Vue + ElementUI + Axios
 
 #### 核心技术
  基础框架：SpringBoot                              
  数据缓存：Redis                                   
  数据库：Mysql                                    
- 权限控制：SpringSecurity                          
+ 权限控制：Sa-token                          
  全局日志记录：AOP                                   
  前端模板：vue-admin-template                      
  前端技术：Node.js + Npm + Vue + ElementUI + Axios 
@@ -32,7 +37,6 @@
 3.  记录日志 在方法上加注解
 `` @Log(title = "角色模块",businessType = BusinessType.ASSGIN,isSaveRequestData = true,isSaveResponseData = true)``
 4. 添加缓存
-
 ``@CacheAuth(name="操作模块",overtime=1*60*60*1000")默认缓存一小时``
 
 
