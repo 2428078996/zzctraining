@@ -10,4 +10,7 @@
             (#{roleId},#{menuId})
         </foreach>
     </insert>
+    <delete id="removeByRoleId">
+        delete from sys_role_menu where role_id = #{roleId}
+    </delete>
 </mapper>

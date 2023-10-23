@@ -1,6 +1,7 @@
 package com.milk.auth.service.impl;
 
 import cn.dev33.satoken.stp.StpUtil;
+import cn.dev33.satoken.temp.SaTempUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -174,7 +175,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     }
 
     @Override
-    public SysUser login(LoginParam loginParam) {
+    public String login(LoginParam loginParam) {
 
         if (loginParam.getPassword() == null || loginParam.getTempToken() == null || loginParam.getUsername() == null || loginParam.getVerifyCode() == null) {
             throw new CustomerException(ResultEnum.ARGUMENT_VALID_ERROR);
@@ -182,7 +183,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         String verifyCode = redisTemplate.opsForValue().get(loginParam.getTempToken());
 
-        if (verifyCode == null || !verifyCode.equals(loginParam.getVerifyCode())) {
+        if (verifyCode == null || !verifyCode.toUpperCase().equals(loginParam.getVerifyCode())) {
             throw new CustomerException(ResultEnum.VERIFY_CODE_ERROR);
         }
 
@@ -200,9 +201,17 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         if (!password.equals(MD5Utils.encrypt(loginParam.getPassword()))) {
             throw new CustomerException(ResultEnum.PASSWORD_ERROR);
         }
-
+        // 删除验证码
         redisTemplate.delete(loginParam.getTempToken());
-        return user;
+        // 登录操作
+        StpUtil.login(user.getId());
+        // 删除临时token
+        SaTempUtil.deleteToken(loginParam.getTempToken());
+        // 存储数据
+        StpUtil.getSession().set("username",user.getUsername());
+        StpUtil.getSession().set("id",user.getId());
+        // 返回真正的token
+        return StpUtil.getTokenValue();
     }
 
     @Override

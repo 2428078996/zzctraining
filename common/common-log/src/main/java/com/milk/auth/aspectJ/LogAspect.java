@@ -1,11 +1,11 @@
 package com.milk.auth.aspectJ;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.alibaba.fastjson.JSON;
 import com.milk.auth.annotation.Log;
 import com.milk.auth.service.AsyncOperLogService;
 import com.milk.common.IpUtils;
 import com.milk.common.RequestUtils;
-import com.milk.common.TokenUtils;
 import com.milk.model.pojo.SysOperLog;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -39,24 +39,21 @@ public class LogAspect {
     private AsyncOperLogService asyncOperLogService;
 
 
-    @AfterReturning(pointcut = "@annotation(contrLog)" ,returning = "jsonResult")
-    public void doAfterReturn(JoinPoint joinPoint, Log contrLog,Object jsonResult){
-
-        handleLog(joinPoint,contrLog,jsonResult,null);
-
+    @AfterReturning(pointcut = "@annotation(operLog)" ,returning = "jsonResult")
+    public void doAfterReturn(JoinPoint joinPoint, Log operLog,Object jsonResult){
+        handleLog(joinPoint,operLog,jsonResult,null);
     }
 
-    @AfterThrowing(pointcut = "@annotation(contrLog)",throwing = "e")
-    public void doAfterThrow(JoinPoint joinPoint,Log contrLog,Exception e){
-        handleLog(joinPoint,contrLog,null,e);
+    @AfterThrowing(pointcut = "@annotation(operLog)",throwing = "e")
+    public void doAfterThrow(JoinPoint joinPoint, Log operLog, Exception e){
+        handleLog(joinPoint,operLog,null,e);
     }
 
     protected void handleLog(JoinPoint joinPoint, Log contrLog, Object jsonResult,Exception e) {
 
         try {
             HttpServletRequest request = RequestUtils.getRequest();
-            String token = request.getHeader("token");
-            String username = TokenUtils.getUsername(token);
+            String username = StpUtil.getSession().get("username").toString();
 
             SysOperLog sysOperLog = new SysOperLog();
             sysOperLog.setStatus(1);
@@ -71,7 +68,6 @@ public class LogAspect {
 
             String className = joinPoint.getTarget().getClass().getName();
             String methodName = joinPoint.getSignature().getName();
-
             sysOperLog.setMethod(className+"."+methodName+"()");
 
             sysOperLog.setRequestMethod(request.getMethod());

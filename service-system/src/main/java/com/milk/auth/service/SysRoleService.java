@@ -13,4 +13,5 @@ import com.milk.model.pojo.SysRole;
 public interface SysRoleService extends IService<SysRole> {
     IPage<SysRole> pageList(RolePageParam rolePageParam);
 
+    void removeRoleById(Long id);
 }

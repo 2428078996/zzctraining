@@ -1,14 +1,13 @@
 package com.milk.auth.controller;
 
 import cn.dev33.satoken.annotation.SaIgnore;
-import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.temp.SaTempUtil;
 import cn.dev33.satoken.util.SaResult;
+import com.milk.auth.annotation.LoginLog;
 import com.milk.auth.service.SysUserService;
 import com.milk.common.R;
 import com.milk.common.VerifyImgUtil;
 import com.milk.model.params.LoginParam;
-import com.milk.model.pojo.SysUser;
 import com.milk.model.vo.UserInfoVo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -80,16 +79,13 @@ public class LoginController {
      * 登录
      * @return
      */
+    @LoginLog
     @ApiOperation(value="登录")
     @PostMapping("/login")
     public R login(@RequestBody LoginParam loginParam) {
+        String  token = sysUserService.login(loginParam);
 
-        SysUser user = sysUserService.login(loginParam);
-
-        StpUtil.login(user.getId());
-        SaTempUtil.deleteToken(loginParam.getTempToken());
-
-        return R.success().add("token",StpUtil.getTokenValue());
+        return R.success().add("token",token);
     }
     /**
      * 获取用户信息

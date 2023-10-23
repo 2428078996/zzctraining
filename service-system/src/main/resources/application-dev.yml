@@ -21,11 +21,11 @@ spring:
       matching-strategy: ant_path_matcher
 
   redis:
-    host: localhost
+    host: 127.0.0.1
     port: 6379
     database: 0
     timeout: 1800000
-    password:
+    password: 123456
     jedis:
       pool:
         max-active: 20 #最大连接数
@@ -37,7 +37,7 @@ spring:
     druid:
       url: jdbc:mysql://localhost:3306/milk_auth?characterEncoding=utf-8&useSSL=false&allowPublicKeyRetrieval=true
       username: root
-      password: 123kkk
+      password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
 ############## Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:

@@ -42,7 +42,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
     public List<SysMenu> treeList() {
 
         List<SysMenu> menuList = this.list();
-
 //        转换树形列表
         List<SysMenu> sysMenus= TreeUtils.buildTree(menuList);
 
@@ -106,7 +105,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         }
 
         sysMenus = TreeUtils.buildTree(sysMenus);
-        log.info("Tree后:{}",sysMenus);
         List<RouterVo> routerVoList = TreeUtils.buildRouters(sysMenus);
         return routerVoList;
     }
@@ -136,7 +134,6 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper,SysMenu> imple
         if (count >0 ){
             throw new CustomerException(ResultEnum.NODE_ERROR);
         }
-
         SysMenu menu = new SysMenu();
         menu.setId(id.toString());
 

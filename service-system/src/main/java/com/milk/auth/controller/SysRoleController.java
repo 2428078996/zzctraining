@@ -63,9 +63,8 @@ public class SysRoleController {
     @ApiOperation(value="根据id删除角色")
     @DeleteMapping("/del/{id}")
     public R<SysRole> delByRoleId(@PathVariable("id") Long id){
-        sysRoleService.removeById(id);
+        sysRoleService.removeRoleById(id);
         return R.success("删除成功！");
-
     }
 
     @Log(title = "角色管理", businessType = BusinessType.DELETE)

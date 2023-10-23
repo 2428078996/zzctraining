@@ -1,19 +1,20 @@
-# milk_auth
+# 权限设计
 
 ### 即将开发
-1、登录日志
-2、权限校验
-3、操作日志
+1、缓存经常使用的数据,sa-token的数据持久到redis(导入依赖有问题)
+2、一些优化
 
 #### 介绍
 权限管理是所有后台系统都会涉及的一个重要组成部分，而权限管理的核心流程是相似的，如果每个后台单独开发一套权限管理系统，就是重复造轮子，是人力的极大浪费，本项目就是针对这个问题，提供了一套通用的权限解决方案。
+项目提供了很多的工具类，对其的开发可直接copy
 
 #### 软件架构
 项目服务器端架构：SpringBoot + MyBatisPlus + sa-token + Redis
 前端架构：Node.js + Npm + Vue + ElementUI + Axios
 
 #### 核心技术
- 基础框架：SpringBoot                              
+ 基础框架：SpringBoot
+ 开发文档：Swagger UI
  数据缓存：Redis                                   
  数据库：Mysql                                    
  权限控制：Sa-token                          
@@ -30,29 +31,11 @@
 
 #### 使用说明
 
-1.  后端权限控制  在方法上加注解
-``@PreAuthorize("hasAnyAuthority('bnt.sysMenu.add')")``
-2.  前端权限控制  在按钮加
+1、后端权限控制  在方法上加注解sa-token自带的注解
+``@CheckPermission("btn.menu.add")``
+2、前端权限控制  在按钮加
 ``:disabled="$hasBP('bnt.sysMenu.update') === false"``
-3.  记录日志 在方法上加注解
+3、记录日志 在方法上加注解
 `` @Log(title = "角色模块",businessType = BusinessType.ASSGIN,isSaveRequestData = true,isSaveResponseData = true)``
-4. 添加缓存
-``@CacheAuth(name="操作模块",overtime=1*60*60*1000")默认缓存一小时``
-
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+4、记录登录日志
+``@LoginLog``

@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
 import java.time.Duration;
 
 /**
- * @Description 缓存文件
+ * @Description 缓存文件,已使用spring cache + redis 实现
  * @Author @Milk
  * @Date 2022/11/10 16:53
  */

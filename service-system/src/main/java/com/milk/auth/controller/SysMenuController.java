@@ -1,6 +1,5 @@
 package com.milk.auth.controller;
 
-import com.milk.auth.annotation.CacheAuth;
 import com.milk.auth.annotation.Log;
 import com.milk.auth.enums.BusinessType;
 import com.milk.auth.service.SysMenuService;
@@ -30,7 +29,6 @@ public class SysMenuController {
     @Autowired
     private SysMenuService sysMenuService;
 
-    @CacheAuth(name = "菜单模块")
     @ApiOperation(value = "获取菜单")
     @GetMapping("/treeList")
     public R findNodes() {

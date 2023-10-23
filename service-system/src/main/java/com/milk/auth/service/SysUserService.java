@@ -26,7 +26,7 @@ public interface SysUserService extends IService<SysUser> {
 
     boolean doAssign(UserRoleParam userRoleParam);
 
-    SysUser login(LoginParam loginParam);
+    String login(LoginParam loginParam);
 
     UserInfoVo getUserInfo();
 

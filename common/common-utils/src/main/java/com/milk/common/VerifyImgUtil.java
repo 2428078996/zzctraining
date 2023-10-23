@@ -42,7 +42,7 @@ public class VerifyImgUtil {
 
         RandomGenerator randomGenerator = new RandomGenerator(VERIFY_CODES,4);
         captcha.setGenerator(randomGenerator);
-        putVerifyCode(tempToken, captcha.getCode());
+        putVerifyCode(tempToken, captcha.getCode().toUpperCase());
         captcha.write(os);
     }
 

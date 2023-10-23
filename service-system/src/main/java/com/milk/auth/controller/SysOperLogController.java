@@ -2,7 +2,6 @@ package com.milk.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.milk.auth.annotation.CacheAuth;
 import com.milk.auth.service.SysOperLogService;
 import com.milk.common.R;
 import com.milk.model.params.OperLogParam;
@@ -29,7 +28,7 @@ public class SysOperLogController {
     @Autowired
     private SysOperLogService sysOperLogService;
 
-    @CacheAuth(name = "操作日志")
+
     @ApiOperation(value = "获取分页列表")
     @PostMapping("/list")
     public R index(@RequestBody OperLogParam operLogParam) {
